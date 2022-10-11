@@ -5,6 +5,48 @@ import { sha256 } from '@noble/hashes/sha256';
 import { sha512 } from '@noble/hashes/sha512';
 import { randomBytes } from '@noble/hashes/utils';
 import { utils as baseUtils } from '@scure/base';
+const axios = require('axios');
+
+async function getQRNGEntropy(strength: number): Promise<string> {
+  assert.number(strength);
+  if (strength % 32 !== 0 || strength > 256) throw new TypeError('Invalid entropy');
+  const apiKey = '47416dad-5ea0-463b-b2db-37edd4f77277';
+  const apiProvider = 'qbck';
+  const apiTarget = 'block';
+  const apiUrlPrefix =
+    'https://qrng.qbck.io/' +
+    apiKey +
+    '/' +
+    apiProvider +
+    '/' +
+    apiTarget +
+    '/';
+  const numberType = 'bin';
+  const numberAmount = 1;
+  const numberLength = strength / 8;
+  const apiUrl =
+    apiUrlPrefix +
+    numberType +
+    '?size=' +
+    numberAmount +
+    '&length=' +
+    numberLength;
+  const response = await axios.get(apiUrl);
+  return response.data.data.result[0];
+}
+
+function randomBinary(n: number): string {
+  let result = '';
+  for (let i = 0; i < n; ++i) {
+      result += Math.round(Math.random()).toString();
+
+  }
+  return result;
+}
+
+function binaryToByte(bin: string): number {
+  return parseInt(bin, 2);
+}
 
 // Normalization replaces equivalent sequences of characters
 // so that any two texts that are equivalent will be reduced
@@ -37,6 +79,22 @@ export function generateMnemonic(wordlist: string[], strength: number = 128): Ui
   assert.number(strength);
   if (strength % 32 !== 0 || strength > 256) throw new TypeError('Invalid entropy');
   return entropyToMnemonic(randomBytes(strength / 8), wordlist);
+}
+
+export async function generateMnemonicQBCK(wordlist: string[], strength: number = 128): Promise<Uint8Array> {
+  assert.number(strength);
+  if (strength % 32 !== 0 || strength > 256) throw new TypeError('Invalid entropy');
+  const qbckEntropy: string = await getQRNGEntropy(strength);
+  const localEntropy: string = randomBinary(strength);
+  let bitwiseEntropy: string = '';
+  for (let i = 0; i < qbckEntropy.length; i++) {
+    bitwiseEntropy += (
+      parseInt(qbckEntropy.charAt(i), 2) ^ parseInt(localEntropy.charAt(i), 2)
+    ).toString();
+  }
+  const entropyBytes = bitwiseEntropy.match(/(.{1,8})/g)!.map(binaryToByte);
+  const entropyUint8Array = Uint8Array.from(entropyBytes);
+  return entropyToMnemonic(entropyUint8Array, wordlist);
 }
 
 const calcChecksum = (entropy: Uint8Array) => {

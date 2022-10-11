@@ -1,6 +1,7 @@
 import {
   entropyToMnemonic,
   generateMnemonic,
+  generateMnemonicQBCK,
   mnemonicToEntropy,
   mnemonicToSeed,
   mnemonicToSeedSync,
@@ -42,6 +43,13 @@ describe('BIP39', () => {
   describe('Mnemonic generation', () => {
     it('should create a valid menomic', async () => {
       const mnemonic = generateMnemonic(englishWordlist, 128);
+      await deepStrictEqual(validateMnemonic(mnemonic, englishWordlist), true);
+    });
+  });
+
+  describe('QBCK mnemonic generation', () => {
+    it('should create a valid qbck mnemonic', async () => {
+      const mnemonic = await generateMnemonicQBCK(englishWordlist, 128);
       await deepStrictEqual(validateMnemonic(mnemonic, englishWordlist), true);
     });
   });
@@ -604,6 +612,14 @@ describe('BIP39', () => {
     });
     it('generateMnemonic can vary entropy length', async () => {
       const mnemonicAsUint8 = generateMnemonic(englishWordlist, 160);
+      const recoveredIndices = Array.from(new Uint16Array(mnemonicAsUint8.buffer));
+
+      const mnemonicAsArray = recoveredIndices.map((i) => englishWordlist[i]);
+
+      await deepStrictEqual(mnemonicAsArray.length, 15, 'can vary generated entropy bit length');
+    });
+    it('generateMnemonicQBCK can vary entropy length', async () => {
+      const mnemonicAsUint8 = await generateMnemonicQBCK(englishWordlist, 160);
       const recoveredIndices = Array.from(new Uint16Array(mnemonicAsUint8.buffer));
 
       const mnemonicAsArray = recoveredIndices.map((i) => englishWordlist[i]);
