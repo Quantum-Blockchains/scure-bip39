@@ -1,6 +1,6 @@
 {
   "name": "scure-bip39-qbck",
-  "version": "2.1.2",
+  "version": "2.1.10",
   "description": "QBCK fork of the MetaMask fork of @scure/bip39: a secure, audited & minimal implementation of BIP39 mnemonic phrases",
   "main": "./dist/index.js",
   "files": [
@@ -10,7 +10,7 @@
   "dependencies": {
     "@noble/hashes": "~1.1.1",
     "@scure/base": "~1.1.0",
-    "axios": "^1.1.2"
+    "cross-fetch": "^3.1.5"
   },
   "devDependencies": {
     "@metamask/auto-changelog": "^2.6.1",
