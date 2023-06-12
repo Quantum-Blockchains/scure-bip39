@@ -1,6 +1,7 @@
 import {
   entropyToMnemonic,
   generateMnemonic,
+  generateMnemonicQBCK,
   mnemonicToEntropy,
   mnemonicToSeed,
   mnemonicToSeedSync,
@@ -42,6 +43,13 @@ describe('BIP39', () => {
   describe('Mnemonic generation', () => {
     it('should create a valid menomic', async () => {
       const mnemonic = generateMnemonic(englishWordlist, 128);
+      await deepStrictEqual(validateMnemonic(mnemonic, englishWordlist), true);
+    });
+  });
+
+  describe('QBCK mnemonic generation', () => {
+    it('should create a valid qbck mnemonic', async () => {
+      const mnemonic = await generateMnemonicQBCK(englishWordlist, 128);
       await deepStrictEqual(validateMnemonic(mnemonic, englishWordlist), true);
     });
   });
