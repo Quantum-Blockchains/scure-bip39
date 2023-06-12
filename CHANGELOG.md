@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0]
+### Added
+- Update `mnemonicToSeed` (async version) to accept mnemonic arg formatted as `Uint8Array` the same as the synchronous version already does ([#14](https://github.com/MetaMask/scure-bip39/pull/14))
+
+## [2.0.4]
+### Fixed
+- Fixes file path to typescript types in `package.json` ([#12](https://github.com/MetaMask/scure-bip39/pull/12))
+
 ## [2.0.3]
 ### Changed
 - Update entrypoint for package [#10](https://github.com/MetaMask/scure-bip39/pull/10)
@@ -22,7 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Apply patches to allow passing mnemonic as a Uint8Array instead of as a string [#1](https://github.com/MetaMask/scure-bip39/pull/1)
 
-[Unreleased]: https://github.com/MetaMask/scure-bip39/compare/v2.0.3...HEAD
+[Unreleased]: https://github.com/MetaMask/scure-bip39/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/MetaMask/scure-bip39/compare/v2.0.4...v2.1.0
+[2.0.4]: https://github.com/MetaMask/scure-bip39/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/MetaMask/scure-bip39/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/MetaMask/scure-bip39/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/MetaMask/scure-bip39/compare/v2.0.0...v2.0.1
